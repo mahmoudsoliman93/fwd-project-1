@@ -59,8 +59,6 @@ window.addEventListener("load", BuildNavMenu());
 // Build menu
 
 // Scroll to section on link click
-const max_top = 250;
-const min_top = 0;
 window.addEventListener("scroll", function () {
     for (const section of sections) {
         const sectionTop = section.getBoundingClientRect().top;
