@@ -22,54 +22,93 @@
  * Define Global Variables
  *
  */
-const ul = document.getElementById("navbar__list");
-const sections = document.querySelectorAll("section");
-const fragment = document.createDocumentFragment();
+const sections = document.querySelectorAll("section"); //tutorial
+window.onload = buildNav(); //tutorial
+
 /**
  * End Global Variables
  * Start Helper Functions
  *
  */
-function BuildNavMenu() {
-    sections.forEach(function (section) {
-        const sectionId = section.getAttribute("id");
-        const sectionTitle = section.getAttribute("data-nav");
-        const li = document.createElement("li");
-        const link = document.createElement("a");
-        link.setAttribute("href", "#" + sectionId);
-        link.setAttribute("class", "menu__link");
-        link.textContent = sectionTitle;
-        link.addEventListener("click", function (evt) {
-            evt.preventDefault();
-            section.scrollIntoView({
-                behavior: "smooth",
-            });
-        });
-        li.appendChild(link);
-        fragment.appendChild(li);
+function removeActiveClass() {
+    const section = document.querySelector(".your-active-class");
+    section.classList.remove("your-active-class");
+    const navBarElements = document.querySelectorAll(".menu__link");
+    navBarElements.forEach.call(navBarElements, function (element) {
+        element.classList.remove("active");
     });
-    ul.appendChild(fragment);
 }
 
-window.addEventListener("load", BuildNavMenu());
-/**
- * End Helper Functions
- */
+function createLiElement(section) {
+    let titleNavBar = section.getAttribute("data-nav"); // tutorial
+    let idForActivating = section.getAttribute("id"); // tutorial
+    let li = document.createElement("li"); // tutorial
+    // adding attributes on new li created element
+    li.addEventListener("click", function (event) {
+        event.preventDefault();
+        if (!event.target.classList.contains("active")) {
+            scrollToAnchor(idForActivating);
+            //remove actual active class
+            removeActiveClass();
+            activeElement(idForActivating);
+        }
+    });
+    li.classList.add("menu__link");
+    li.setAttribute("id", "barNav" + idForActivating);
+    li.appendChild(document.createTextNode(titleNavBar));
+    return li;
+}
 
-// Build menu
+function activeElement(sectionId) {
+    let navBarElement = document.getElementById("barNav" + sectionId);
+    navBarElement.className += " active";
+    let sectionElement = document.getElementById(sectionId);
+    sectionElement.classList.add("your-active-class");
+}
 
-// Scroll to section on link click
 window.addEventListener("scroll", function () {
     for (const section of sections) {
         const sectionTop = section.getBoundingClientRect().top;
-        const activeLink = ul.querySelector(`a[href="#${section.id}"]`);
-        if (sectionTop > 0 && sectionTop < 250) {
+        if (sectionTop > -100 && sectionTop < 250) {
             section.classList.add("your-active-class");
-            activeLink.classList.add("active-link");
         } else {
             section.classList.remove("your-active-class");
-            activeLink.classList.remove("active-link");
         }
     }
 });
-// Set sections as active
+/**
+ * End Helper Functions
+ * Begin Main Functions
+ *
+ */
+// build the nav menu
+function buildNav() {
+    const sections = document.querySelectorAll("section");
+    sections.forEach.call(sections, function (section) {
+        // create li element for each section
+        document
+            .getElementById("navbar__list")
+            .appendChild(createLiElement(section));
+    });
+}
+
+// Scroll to section on nav bar click
+function activeSection(section) {
+    removeActiveClass();
+    // Set specific section as active
+    let elToActivate = document.getElementById(section.id);
+    elToActivate.classList.add("your-active-class");
+    activeElement(section.id);
+}
+
+// Scroll to anchor ID using scrollTO event
+function scrollToAnchor(sectionId) {
+    let elScrollTo = document.getElementById(sectionId);
+    elScrollTo.scrollIntoView({
+        behavior: "smooth",
+    });
+}
+/**
+ * End Main Functions
+ *
+ */
