@@ -1,6 +1,3 @@
-
-window.onload=buildNav();
-
 /**
  * 
  * Manipulating the DOM exercise.
@@ -25,78 +22,57 @@ window.onload=buildNav();
  * Define Global Variables
  * 
 */
-
-
+const ul = document.getElementById('navbar__list');
+const sections = document.querySelectorAll('section');
+const fragment = document.createDocumentFragment();
 /**
  * End Global Variables
  * Start Helper Functions
  * 
 */
-
-function removeActiveClass(){
-  const section = document.querySelector(".your-active-class");
-  section.removeAttribute("class");
+function BuildNavMenu(){
+sections.forEach(function(section){
+    const sectionId = section.getAttribute('id');
+    const sectionTitle = section.getAttribute('data-nav');
+    const li = document.createElement('li');
+    const link = document.createElement('a');
+    link.setAttribute('href', '#' + sectionId);
+    link.setAttribute('class', 'menu__link');
+    link.textContent = sectionTitle;
+    link.addEventListener('click', function(evt){
+        evt.preventDefault();
+        section.scrollIntoView({
+            behavior: 'smooth',
+        });
+    });
+    li.appendChild(link);
+    fragment.appendChild(li);
+});
+ul.appendChild(fragment);
 }
 
-function createLiElement(section){
-  var titleNavBar = section.getAttribute('data-nav');
-        var idForActivating = section.getAttribute('id');
-        var li = document.createElement('li');
-        // adding attributes on new li created element
-        li.setAttribute('onclick','activeSection('+ idForActivating +')');
-        li.setAttribute('class', 'menu__link');
-        li.appendChild(document.createTextNode(titleNavBar));
-        return li;
-}
-
+window.addEventListener('load', BuildNavMenu());
 /**
  * End Helper Functions
- * Begin Main Functions
- * 
 */
 
-// build the nav menu
-function buildNav(){
-    const sections = document.querySelectorAll("section");
-    sections.forEach.call(sections, function(section) {
-        // create li element for each section
-        document.getElementById("navbar__list").appendChild(createLiElement(section));
-        
-        // Add class 'active' to each section when near top of viewport
-        section.addEventListener('mouseover', function () {
-          //remove actual active class
-          removeActiveClass();
-          // set active class on selected element
-          this.setAttribute('class', 'your-active-class');
-        });
-      });
-}
+// Build menu 
 
-// Scroll to section on nav bar click
-function activeSection(section){
-  removeActiveClass();
-  // Set specific section as active
-  var elToActivate = document.getElementById(section.id);
-  elToActivate.setAttribute('class', 'your-active-class');
-  // scroll on specific section after click on nav menu element
-  scrollToAnchor(section.id);
-}
-
-// Scroll to anchor ID using scrollTO event
-function scrollToAnchor(sectionId){
-  var elScrollTo = document.getElementById(sectionId);
-  // scrolling function
-  elScrollTo.scrollIntoView({
-    behavior: 'smooth'
+// Scroll to section on link click
+const max_top = 250;
+const min_top = 0;
+window.addEventListener('scroll', function(){
+    for (const section of sections){
+        const sectionTop = section.getBoundingClientRect().top;
+        const activeLink = ul.querySelector(`a[href="#${section.id}"]`);
+        if (sectionTop > 0 && sectionTop < 250){
+            section.classList.add('your-active-class');
+            activeLink.classList.add('active-link');
+        }else{
+            section.classList.remove('your-active-class');
+            activeLink.classList.remove('active-link');
+        }
+    }
 });
-}
-
-/**
- * End Main Functions
- * 
-*/
-
-
-
-
+// Set sections as active
 
