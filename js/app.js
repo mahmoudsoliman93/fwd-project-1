@@ -18,31 +18,53 @@
  * Great to have comments before crucial code sections within the procedure.
  */
 
-/**
+/*
  * Define Global Variables
- *
  */
-const sections = document.querySelectorAll("section"); //tutorial
-window.onload = buildNav(); //tutorial
+const sections = document.querySelectorAll("section");
+window.onload = buildNav();
+/*
+ * End Global Variables*/
 
-/**
- * End Global Variables
- * Start Helper Functions
+/* Begin Main Functions
  *
  */
-function removeActiveClass() {
-    const section = document.querySelector(".your-active-class");
-    section.classList.remove("your-active-class");
-    const navBarElements = document.querySelectorAll(".menu__link");
-    navBarElements.forEach.call(navBarElements, function (element) {
-        element.classList.remove("active");
+// build the nav menu
+function buildNav() {
+    sections.forEach.call(sections, function (section) {
+        // create li element for each section
+        document
+            .getElementById("navbar__list")
+            .appendChild(createLiElement(section));
     });
 }
 
+// Scroll to section on nav bar click
+function activeSection(section) {
+    removeActiveClass();
+    // Set specific section as active
+    let elToActivate = document.getElementById(section.id);
+    elToActivate.classList.add("your-active-class");
+}
+
+// Scroll to anchor ID using scrollTO event
+function scrollToAnchor(sectionId) {
+    let elScrollTo = document.getElementById(sectionId);
+    elScrollTo.scrollIntoView({
+        behavior: "smooth",
+    });
+}
+/*
+ * End Main Functions
+ */
+
+/*
+ * Start Helper Functions
+ */
 function createLiElement(section) {
-    let titleNavBar = section.getAttribute("data-nav"); // tutorial
-    let idForActivating = section.getAttribute("id"); // tutorial
-    let li = document.createElement("li"); // tutorial
+    let titleNavBar = section.getAttribute("data-nav");
+    let idForActivating = section.getAttribute("id");
+    let li = document.createElement("li");
     // adding attributes on new li created element
     li.addEventListener("click", function (event) {
         event.preventDefault();
@@ -66,49 +88,28 @@ function activeElement(sectionId) {
     sectionElement.classList.add("your-active-class");
 }
 
+function removeActiveClass() {
+    const section = document.querySelector(".your-active-class");
+    section.classList.remove("your-active-class");
+    const navBarElements = document.querySelectorAll(".menu__link");
+    navBarElements.forEach.call(navBarElements, function (element) {
+        element.classList.remove("active");
+    });
+}
+
 window.addEventListener("scroll", function () {
     for (const section of sections) {
         const sectionTop = section.getBoundingClientRect().top;
+        const navLiElement = document.getElementById("barNav" + section.id)
         if (sectionTop > -100 && sectionTop < 250) {
             section.classList.add("your-active-class");
+            navLiElement.classList.add("active");
         } else {
             section.classList.remove("your-active-class");
+            navLiElement.classList.remove("active");
         }
     }
 });
 /**
- * End Helper Functions
- * Begin Main Functions
- *
- */
-// build the nav menu
-function buildNav() {
-    const sections = document.querySelectorAll("section");
-    sections.forEach.call(sections, function (section) {
-        // create li element for each section
-        document
-            .getElementById("navbar__list")
-            .appendChild(createLiElement(section));
-    });
-}
+ * End Helper Functions*/
 
-// Scroll to section on nav bar click
-function activeSection(section) {
-    removeActiveClass();
-    // Set specific section as active
-    let elToActivate = document.getElementById(section.id);
-    elToActivate.classList.add("your-active-class");
-    activeElement(section.id);
-}
-
-// Scroll to anchor ID using scrollTO event
-function scrollToAnchor(sectionId) {
-    let elScrollTo = document.getElementById(sectionId);
-    elScrollTo.scrollIntoView({
-        behavior: "smooth",
-    });
-}
-/**
- * End Main Functions
- *
- */
